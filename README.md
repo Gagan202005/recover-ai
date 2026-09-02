@@ -1,5 +1,5 @@
 <p align="center">
-  <img src="https://img.shields.io/badge/🏆_Razorpay-Buildathon_2025-002970?style=for-the-badge&logo=razorpay&logoColor=white" />
+  <img src="https://img.shields.io/badge/🏆_Razorpay-Buildathon_2026-002970?style=for-the-badge&logo=razorpay&logoColor=white" />
   <img src="https://img.shields.io/badge/Track_03-AI_Revenue_Recovery-6366f1?style=for-the-badge" />
   <img src="https://img.shields.io/badge/Agents-7_Autonomous_AI-22c55e?style=for-the-badge" />
   <img src="https://img.shields.io/badge/MCP_Tools-12-f59e0b?style=for-the-badge" />
@@ -24,7 +24,7 @@
 
 ## 🎯 Problem Statement
 
-> **"Find revenue that's slipping away and win it back"** — Razorpay Buildathon 2025, Track 03
+> **"Find revenue that's slipping away and win it back"** — Razorpay Buildathon 2026, Track 03
 
 Indian merchants lose **₹18,000 Cr+ annually** to failed payments, abandoned checkouts, and overdue invoices. Existing recovery solutions are **rule-based**, **single-channel**, and **lack intelligence**. They can't diagnose why a payment failed, can't learn from past recoveries, and can't hold intelligent conversations with customers.
 
@@ -252,7 +252,7 @@ sequenceDiagram
     CA->>GEM: NLU Intent Classification Prompt
     Note over GEM: Analyze: intent, promise_date_iso, reply<br/>6 intents: promise_to_pay | payment_done<br/>will_pay_now | need_help | opt_out | other
 
-    GEM-->>CA: {intent: "promise_to_pay", promise_date_iso: "2025-09-03", reply: "Koi baat nahi..."}
+    GEM-->>CA: {intent: "promise_to_pay", promise_date_iso: "2026-09-03", reply: "Koi baat nahi..."}
 
     CA->>DB: INSERT promise_to_pay (date, amount, status)
     CA->>DB: UPDATE transaction → in_progress
@@ -1147,7 +1147,7 @@ flowchart TB
 
 ## 📜 License
 
-This project was built for the **Razorpay Buildathon 2025** — Track 03: AI Revenue Recovery.
+This project was built for the **Razorpay Buildathon 2026** — Track 03: AI Revenue Recovery.
 
 ---
 
