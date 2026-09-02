@@ -1,0 +1,37 @@
+# Core
+fastapi==0.115.6
+uvicorn[standard]==0.34.0
+python-dotenv==1.0.1
+pydantic==2.10.4
+pydantic-settings==2.7.1
+
+# AI & Agents
+langgraph==0.2.60
+langchain==0.3.14
+langchain-google-genai==2.0.8
+langchain-community==0.3.14
+langchain-mcp-adapters==0.0.4
+mcp>=1.2.1,<1.4
+google-generativeai==0.8.4
+
+# Vector DB (RAG)
+pinecone-client==5.0.1
+
+# Database
+supabase==2.11.0
+
+# Payment
+razorpay==1.4.2
+
+# Communication
+twilio==9.4.0
+resend>=2.5.1
+
+# PDF Report
+weasyprint==62.3
+
+# Utilities
+networkx==3.4.2
+httpx==0.28.1
+numpy==2.2.1
+jinja2==3.1.5
