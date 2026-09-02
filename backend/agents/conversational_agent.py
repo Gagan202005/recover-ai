@@ -26,7 +26,8 @@ MODELS_TO_TRY = [
 def _resolve_relative_date(text: str) -> str:
     """Robust fallback date resolver for Hinglish / English / Hindi phrases."""
     text_lower = (text or "").lower().strip()
-    today = datetime.utcnow().date()
+    # Use Indian Standard Time (UTC+5:30) for accurate day calculations
+    today = (datetime.utcnow() + timedelta(hours=5, minutes=30)).date()
 
     # 1. Direct offset words
     if "tomorrow" in text_lower or "kal" in text_lower:
@@ -160,13 +161,15 @@ async def handle_customer_reply(customer: dict, user_message: str, channel: str 
             pass  # Keep default link on any DB error
 
     # 2. Prompt LLM for Intent Classification, Promise Date Extraction, and Empathic Reply
-    today_iso = datetime.utcnow().strftime('%Y-%m-%d')
-    current_year = datetime.utcnow().year
+    now_ist = datetime.utcnow() + timedelta(hours=5, minutes=30)
+    today_iso = now_ist.strftime('%Y-%m-%d')
+    today_weekday = now_ist.strftime('%A')
+    current_year = now_ist.year
     
     prompt = f"""You are the Conversational AI Revenue Recovery Agent for StyleBazaar (RecoverAI).
 A customer replied to our automated payment failure communication.
 
-Today's Date: {today_iso} (Year: {current_year})
+Current Local Time (IST): {today_iso} ({today_weekday}, Year: {current_year})
 
 Customer Profile:
 - Name: {customer.get('name', 'Gagan Singhal')}
@@ -178,7 +181,7 @@ Customer Profile:
 
 Analyze the customer's reply using Natural Language Understanding and extract:
 1. "intent": Exactly one of:
-   - "promise_to_pay": Customer states when they will pay (e.g. "I will pay on 10 sept", "kal pay karunga", "next week", "Friday", "salary ke baad", "after 2 days").
+   - "promise_to_pay": Customer states when they will pay (e.g. "I will pay on 10 sept", "kal pay karunga", "next week", "Friday", "salary ke baad", "after 2 days", "parso").
    - "payment_done": Customer states they have already paid or completed it (e.g. "already paid", "done", "ho gaya", "kar diya").
    - "will_pay_now": Customer asks for link or wants to pay immediately (e.g. "send link", "abhi karta hu", "give upi link").
    - "need_help": Customer asks why it failed, has questions, or issues.
@@ -186,11 +189,14 @@ Analyze the customer's reply using Natural Language Understanding and extract:
    - "other": General greetings or chit-chat.
 
 2. "promise_date_iso": 
-   - If intent is "promise_to_pay", carefully compute and output the EXACT target date in "YYYY-MM-DD" format.
-   - For example:
-     * If user says "10 sept" or "10 september", output "{current_year}-09-10".
-     * If user says "tomorrow" or "kal", compute today + 1 day.
-     * If user says a day name like "Thursday" or "Guruvar", compute the upcoming date for that day.
+   - If intent is "promise_to_pay", carefully compute and output the EXACT target date in "YYYY-MM-DD" format dynamically based on what the customer typed:
+     * Specific calendar date: If user says e.g. "15 sept", "10 October", "25th", output the exact date in "{current_year}-MM-DD".
+     * Relative word "tomorrow" / "kal": compute {today_iso} + 1 day.
+     * Relative word "parso" / "day after tomorrow": compute {today_iso} + 2 days.
+     * Relative phrase "in N days" / "N din baad": compute {today_iso} + N days.
+     * Relative phrase "next week" / "agle hafte": compute {today_iso} + 7 days.
+     * Day of week (e.g. "Friday", "somwar", "Monday"): compute the upcoming date for that day from {today_iso} ({today_weekday}).
+     * DO NOT hardcode any date. Calculate dynamically relative to today ({today_iso}).
      * If intent is NOT promise_to_pay, output null.
 
 3. "reply": A warm, natural, human-like reply in {language} (1 to 2 sentences with polite emojis).

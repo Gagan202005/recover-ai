@@ -24,7 +24,8 @@ model = genai.GenerativeModel(settings.gemini_model)
 
 async def check_and_dispatch_due_reminders(force_all: bool = False) -> list:
     """Find scheduled promises and dispatch reminders. If force_all=True, dispatches all active promises."""
-    today_str = date.today().isoformat()
+    # Use Indian Standard Time (UTC+5:30)
+    today_str = (datetime.utcnow() + timedelta(hours=5, minutes=30)).date().isoformat()
 
     # Fetch active promises that are due today or earlier
     query = supabase.table("promise_to_pay") \

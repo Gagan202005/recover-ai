@@ -251,7 +251,7 @@ sequenceDiagram
     CA->>GEM: NLU Classification & Extraction Prompt
     Note over GEM: Extract Intent, Resolve Relative Date, Synthesize Reply<br/>Intents: promise_to_pay, payment_done, will_pay_now, need_help, opt_out, other
 
-    GEM-->>CA: JSON: {intent: "promise_to_pay", promise_date_iso: "2026-09-03", reply: "..."}
+    GEM-->>CA: JSON: {intent: "promise_to_pay", promise_date_iso: "<dynamic_computed_date>", reply: "..."}
 
     CA->>DB: INSERT into promise_to_pay (target date, amount, status=promised)
     CA->>DB: UPDATE transactions (recovery_status=in_progress)
